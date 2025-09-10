@@ -281,7 +281,23 @@ RegisterNetEvent('qbx_truckerjob:completeJob', function(distanceKm)
 
     local stats = getPlayerStats(src)
     local baseMoney = math.random(diff.rewards.money[1], diff.rewards.money[2])
-    local baseExp = diff.rewards.exp
+    
+    -- Calculate EXP based on job type
+    local baseExp = 0
+    if diff.type == 'box' then
+        -- Box jobs: EXP per box delivered
+        local totalBoxes = diff.boxes or 1
+        baseExp = totalBoxes * (diff.rewards.exp or 2)
+    elseif diff.type == 'trailer' then
+        -- Trailer jobs: random EXP between min and max
+        if type(diff.rewards.exp) == 'table' then
+            baseExp = math.random(diff.rewards.exp[1], diff.rewards.exp[2])
+        else
+            baseExp = math.random(3, 10) -- fallback
+        end
+    else
+        baseExp = diff.rewards.exp or 5
+    end
 
     -- reputation tier
     local rep = stats.reputation or 0

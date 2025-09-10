@@ -98,20 +98,20 @@ function updatePlayerStats() {
 
     // Basic info
     document.getElementById('playerName').textContent = playerStats.name || 'Driver';
-    document.getElementById('playerLevel').textContent = playerStats.level || 1;
     document.getElementById('playerRep').textContent = playerStats.reputation || 0;
     document.getElementById('totalDeliveries').textContent = playerStats.total_deliveries || 0;
     document.getElementById('totalEarnings').textContent = `$${(playerStats.total_earnings || 0).toLocaleString()}`;
 
-    // Experience bar
+    // Header level and experience (prominently displayed)
     const currentLevel = playerStats.level || 1;
     const currentExp = playerStats.experience || 0;
     const expForNextLevel = currentLevel * 100;
     const expProgress = Math.min(currentExp, expForNextLevel);
     const expPercentage = (expProgress / expForNextLevel) * 100;
 
-    document.getElementById('expText').textContent = `EXP: ${expProgress} / ${expForNextLevel}`;
-    document.getElementById('expFill').style.width = `${expPercentage}%`;
+    document.getElementById('headerLevel').textContent = currentLevel;
+    document.getElementById('headerExpText').textContent = `${expProgress} / ${expForNextLevel} EXP`;
+    document.getElementById('headerExpFill').style.width = `${expPercentage}%`;
 
     // Tier badge
     updateTierBadge();
@@ -152,12 +152,27 @@ function populateJobList() {
         const jobCard = document.createElement('div');
         jobCard.className = 'job-card';
         
+        // Calculate EXP display
+        let expDisplay = '';
+        if (difficulty.type === 'box') {
+            const totalExp = difficulty.boxes * (difficulty.rewards.exp || 2);
+            expDisplay = `${totalExp} EXP (${difficulty.rewards.exp || 2} per box)`;
+        } else if (difficulty.type === 'trailer') {
+            if (Array.isArray(difficulty.rewards.exp)) {
+                expDisplay = `${difficulty.rewards.exp[0]}-${difficulty.rewards.exp[1]} EXP`;
+            } else {
+                expDisplay = `3-10 EXP`;
+            }
+        } else {
+            expDisplay = `${difficulty.rewards.exp} EXP`;
+        }
+        
         jobCard.innerHTML = `
             <div class="job-header">
                 <div>
                     <div class="job-title">${difficulty.label}</div>
                     <div class="job-subtitle">
-                        ${difficulty.type === 'trailer' ? '🚛 Trailer Delivery' : '📦 Box Delivery'}
+                        ${difficulty.type === 'trailer' ? 'Trailer Delivery' : 'Box Delivery'}
                     </div>
                 </div>
                 <div class="level-badge">Level ${difficulty.requiredLevel}</div>
@@ -177,7 +192,7 @@ function populateJobList() {
                 </div>
                 <div class="reward-item">
                     <div class="reward-label">Experience</div>
-                    <div class="reward-value">${difficulty.rewards.exp} EXP</div>
+                    <div class="reward-value">${expDisplay}</div>
                 </div>
                 <div class="reward-item">
                     <div class="reward-label">Vehicle</div>
@@ -188,7 +203,7 @@ function populateJobList() {
             <button class="btn ${isActive ? 'btn-secondary' : isUnlocked ? 'btn-primary' : 'btn-secondary'}" 
                     onclick="${isActive ? '' : isUnlocked ? `startJob('${key}')` : ''}"
                     ${(!isUnlocked || isActive) ? 'disabled' : ''}>
-                ${isActive ? '⏱️ Job Active' : isUnlocked ? '🚀 Start Job (FREE)' : '🔒 Level Required'}
+                ${isActive ? 'Job Active' : isUnlocked ? 'Start Job (FREE)' : 'Level Required'}
             </button>
         `;
 
@@ -212,7 +227,7 @@ function populateVehicleList() {
                 <div>
                     <div class="vehicle-name">${difficulty.vehicle.toUpperCase()}</div>
                     <div class="vehicle-subtitle">
-                        🚚 For ${difficulty.label}
+                        For ${difficulty.label}
                     </div>
                 </div>
                 <div class="price-badge">Dynamic Price</div>
@@ -243,7 +258,7 @@ function populateVehicleList() {
             <button class="btn ${isUnlocked ? 'btn-rental' : 'btn-secondary'}" 
                     onclick="${isUnlocked ? `rentVehicle('${difficulty.vehicle}', '${key}')` : ''}"
                     ${!isUnlocked ? 'disabled' : ''}>
-                ${isUnlocked ? '🔑 Rent Vehicle' : '🔒 Level Required'}
+                ${isUnlocked ? 'Rent Vehicle' : 'Level Required'}
             </button>
         `;
 
@@ -253,29 +268,42 @@ function populateVehicleList() {
 
 // Update Active Job Section
 function updateActiveJobSection() {
-    const activeJobCard = document.getElementById('activeJobCard');
-    const activeJobInfo = document.getElementById('activeJobInfo');
+    const activeJobSection = document.getElementById('activeJobSection');
+    const activeJobDetails = document.getElementById('activeJobDetails');
+    const jobProgress = document.getElementById('jobProgress');
 
     if (currentJob && difficulties[currentJob.difficulty]) {
         const difficulty = difficulties[currentJob.difficulty];
-        activeJobCard.style.display = 'block';
+        activeJobSection.style.display = 'block';
         
-        activeJobInfo.innerHTML = `
-            <div style="margin-bottom: 10px;">
-                <strong>${difficulty.label}</strong>
-            </div>
-            <div style="font-size: 13px; color: #d1d5db; line-height: 1.4;">
-                <div>🚛 Vehicle: ${currentJob.vehicle.toUpperCase()}</div>
-                <div>📋 Type: ${difficulty.type === 'trailer' ? 'Trailer Delivery' : 'Box Delivery'}</div>
-                ${currentJob.destination ? `<div>📍 Destination: ${currentJob.destination.name}</div>` : ''}
-                <div style="margin-top: 8px; padding: 8px; background: rgba(245, 158, 11, 0.1); border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);">
-                    <div style="color: #f59e0b; font-weight: 600;">🎯 Job In Progress</div>
-                    <div style="font-size: 11px; color: #94a3b8;">Follow GPS to destination</div>
+        // Show delivery progress for box jobs
+        let progressText = '';
+        if (difficulty.type === 'box') {
+            const delivered = (difficulty.boxes || 0) - (currentJob.remainingBoxes || 0);
+            const total = difficulty.boxes || 0;
+            progressText = `${delivered}/${total} boxes delivered`;
+        } else if (difficulty.type === 'trailer') {
+            progressText = 'Trailer delivery in progress';
+        }
+        
+        jobProgress.textContent = progressText;
+        
+        activeJobDetails.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px; color: #d1d5db;">
+                <div>
+                    <div><strong>Job:</strong> ${difficulty.label}</div>
+                    <div><strong>Vehicle:</strong> ${currentJob.vehicle.toUpperCase()}</div>
+                    <div><strong>Type:</strong> ${difficulty.type === 'trailer' ? 'Trailer Delivery' : 'Box Delivery'}</div>
+                </div>
+                <div>
+                    ${currentJob.destination ? `<div><strong>Destination:</strong> ${currentJob.destination.name}</div>` : ''}
+                    <div><strong>Status:</strong> In Progress</div>
+                    <div style="color: #22c55e;"><strong>Follow GPS to destination</strong></div>
                 </div>
             </div>
         `;
     } else {
-        activeJobCard.style.display = 'none';
+        activeJobSection.style.display = 'none';
     }
 }
 

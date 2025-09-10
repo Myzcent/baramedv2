@@ -131,7 +131,7 @@ Config = {
             vehicle = 'mule',
             boxes = 6,
             deposit = 0,
-            rewards = { money = {800, 1200}, exp = 35 },
+            rewards = { money = {800, 1200}, exp = 2 }, -- 2 EXP per box
         },
         medium = {
             label = 'Citywide Logistics',
@@ -140,7 +140,7 @@ Config = {
             vehicle = 'benson',
             boxes = 10,
             deposit = 0,
-            rewards = { money = {1400, 2000}, exp = 60 },
+            rewards = { money = {1400, 2000}, exp = 2 }, -- 2 EXP per box
         },
         hard = {
             label = 'Long-Haul Trailer',
@@ -149,7 +149,7 @@ Config = {
             vehicle = 'phantom3',
             trailer = 'trailers',
             deposit = 0,
-            rewards = { money = {2200, 3200}, exp = 100 },
+            rewards = { money = {2200, 3200}, exp = {3, 10} }, -- 3-10 EXP for trailer
         }
     }
 }

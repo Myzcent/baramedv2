@@ -309,42 +309,28 @@ CreateThread(function()
     })
 end)
 
--- Depot zone: return rental vehicle
-CreateThread(function()
-    local d = Config.Depot and Config.Depot.coords
-    if not d then return end
-    exports.ox_target:addSphereZone({
-        coords = vec3(d.x, d.y, d.z),
-        radius = 2.5,
-        debug = false,
-        options = {
-            {
-                name = 'qbx_truckerjob:returnRental',
-                icon = 'fa-solid fa-warehouse',
-                label = 'Return Rental',
-                canInteract = function(entity, distance, coords, name)
-                    local ped = PlayerPedId()
-                    local veh = GetVehiclePedIsIn(ped, false)
-                    return veh ~= 0
-                end,
-                onSelect = function()
-                    local ped = PlayerPedId()
-                    local veh = GetVehiclePedIsIn(ped, false)
-                    if veh == 0 then return end
-                    local plate = GetVehicleNumberPlateText(veh)
-                    local ok = lib.callback.await('qbx_truckerjob:returnRental', false, plate)
-                    if ok and ok.success then
-                        SetEntityAsMissionEntity(veh, true, true)
-                        DeleteEntity(veh)
-                        QBCore.Functions.Notify('Rental returned.', 'success')
-                    else
-                        QBCore.Functions.Notify((ok and ok.message) or 'Unable to return vehicle', 'error')
-                    end
-                end
-            }
-        }
-    })
+-- Return rental vehicle command (can be used anywhere)
+RegisterCommand('returnrental', function(source, args, rawCommand)
+    local ped = PlayerPedId()
+    local veh = GetVehiclePedIsIn(ped, false)
+    if veh == 0 then 
+        QBCore.Functions.Notify('You must be in a vehicle to return it', 'error')
+        return 
+    end
+    
+    local plate = GetVehicleNumberPlateText(veh)
+    local ok = lib.callback.await('qbx_truckerjob:returnRental', false, plate)
+    if ok and ok.success then
+        SetEntityAsMissionEntity(veh, true, true)
+        DeleteEntity(veh)
+        QBCore.Functions.Notify('Rental returned successfully', 'success')
+    else
+        QBCore.Functions.Notify((ok and ok.message) or 'This is not your rental vehicle', 'error')
+    end
 end)
+
+-- Add keybind for returning rental
+RegisterKeyMapping('returnrental', 'Return Rental Vehicle', 'keyboard', 'F7')
 
 -- Open menu helper
 function OpenTruckerMenu()
@@ -551,6 +537,19 @@ RegisterNUICallback('rentVehicle', function(data, cb)
     local difficulty = data and data.difficulty
     if not vehicleType or not difficulty then cb('error') return end
     if isRenting then cb('ok') return end
+    
+    -- Check distance to rental location
+    local ped = PlayerPedId()
+    local playerPos = GetEntityCoords(ped)
+    local rentalPos = Config.NPCRental.coords
+    local distance = #(playerPos - vector3(rentalPos.x, rentalPos.y, rentalPos.z))
+    
+    if distance > 10.0 then
+        QBCore.Functions.Notify('You must be near the rental location to rent a vehicle', 'error')
+        cb('ok')
+        return
+    end
+    
     isRenting = true
     
     -- close UI immediately to prevent double clicks
