@@ -6,7 +6,7 @@ let isUIVisible = false;
 // NUI Message Handler
 window.addEventListener('message', function(event) {
     const data = event.data;
-
+    
     switch(data.action) {
         case 'openJobMenu':
             showUI();
@@ -26,29 +26,30 @@ window.addEventListener('message', function(event) {
 function showUI() {
     document.getElementById('app').style.display = 'flex';
     isUIVisible = true;
-    document.body.style.overflow = 'hidden';
 }
 
 function hideUI() {
     document.getElementById('app').style.display = 'none';
     isUIVisible = false;
-    document.body.style.overflow = 'auto';
 }
 
 // Tab System
 document.addEventListener('DOMContentLoaded', function() {
     // Tab switching
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    document.querySelectorAll('.nav-tab').forEach(btn => {
         btn.addEventListener('click', function() {
             const tabName = this.dataset.tab;
             switchTab(tabName);
         });
     });
+    
+    // Initialize UI as hidden
+    hideUI();
 });
 
 function switchTab(tabName) {
     // Update tab buttons
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    document.querySelectorAll('.nav-tab').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.tab === tabName) {
             btn.classList.add('active');
@@ -56,14 +57,14 @@ function switchTab(tabName) {
     });
 
     // Update tab content
-    document.querySelectorAll('.tab-content').forEach(content => {
+    document.querySelectorAll('.content-panel').forEach(content => {
         content.classList.remove('active');
     });
     
     if (tabName === 'jobs') {
-        document.getElementById('jobsTab').classList.add('active');
+        document.getElementById('jobsContent').classList.add('active');
     } else if (tabName === 'rental') {
-        document.getElementById('rentalTab').classList.add('active');
+        document.getElementById('rentalContent').classList.add('active');
     }
 }
 
@@ -121,26 +122,22 @@ function updateTierBadge() {
     
     const rep = playerStats.reputation || 0;
     let tier = 'Rookie';
-    let color = '#22c55e';
+    let gradient = 'linear-gradient(135deg, #22c55e, #16a34a)';
     
     if (rep >= 3500) {
         tier = 'Elite';
-        color = '#ef4444';
+        gradient = 'linear-gradient(135deg, #ef4444, #dc2626)';
     } else if (rep >= 1500) {
         tier = 'Pro';
-        color = '#8b5cf6';
+        gradient = 'linear-gradient(135deg, #8b5cf6, #7c3aed)';
     } else if (rep >= 500) {
         tier = 'Skilled';
-        color = '#3b82f6';
+        gradient = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
     }
     
     const badge = document.getElementById('playerTier');
     badge.textContent = tier;
-    badge.style.background = `linear-gradient(135deg, ${color}, ${adjustBrightness(color, -20)})`;
-}
-
-function adjustBrightness(color, amount) {
-    return color; // Simplified for now
+    badge.style.background = gradient;
 }
 
 // Populate Job List
@@ -160,8 +157,7 @@ function populateJobList() {
                 <div>
                     <div class="job-title">${difficulty.label}</div>
                     <div class="job-subtitle">
-                        <i class="fas fa-${difficulty.type === 'trailer' ? 'truck' : 'box'}"></i>
-                        ${difficulty.type === 'trailer' ? 'Trailer Delivery' : 'Box Delivery'}
+                        ${difficulty.type === 'trailer' ? '🚛 Trailer Delivery' : '📦 Box Delivery'}
                     </div>
                 </div>
                 <div class="level-badge">Level ${difficulty.requiredLevel}</div>
@@ -192,8 +188,7 @@ function populateJobList() {
             <button class="btn ${isActive ? 'btn-secondary' : isUnlocked ? 'btn-primary' : 'btn-secondary'}" 
                     onclick="${isActive ? '' : isUnlocked ? `startJob('${key}')` : ''}"
                     ${(!isUnlocked || isActive) ? 'disabled' : ''}>
-                <i class="fas fa-${isActive ? 'clock' : isUnlocked ? 'play' : 'lock'}"></i>
-                ${isActive ? 'Job Active' : isUnlocked ? 'Start Job (FREE)' : 'Level Required'}
+                ${isActive ? '⏱️ Job Active' : isUnlocked ? '🚀 Start Job (FREE)' : '🔒 Level Required'}
             </button>
         `;
 
@@ -217,8 +212,7 @@ function populateVehicleList() {
                 <div>
                     <div class="vehicle-name">${difficulty.vehicle.toUpperCase()}</div>
                     <div class="vehicle-subtitle">
-                        <i class="fas fa-truck"></i>
-                        For ${difficulty.label}
+                        🚚 For ${difficulty.label}
                     </div>
                 </div>
                 <div class="price-badge">Dynamic Price</div>
@@ -249,8 +243,7 @@ function populateVehicleList() {
             <button class="btn ${isUnlocked ? 'btn-rental' : 'btn-secondary'}" 
                     onclick="${isUnlocked ? `rentVehicle('${difficulty.vehicle}', '${key}')` : ''}"
                     ${!isUnlocked ? 'disabled' : ''}>
-                <i class="fas fa-${isUnlocked ? 'key' : 'lock'}"></i>
-                ${isUnlocked ? 'Rent Vehicle' : 'Level Required'}
+                ${isUnlocked ? '🔑 Rent Vehicle' : '🔒 Level Required'}
             </button>
         `;
 
@@ -260,34 +253,29 @@ function populateVehicleList() {
 
 // Update Active Job Section
 function updateActiveJobSection() {
-    const activeJobSection = document.getElementById('activeJobSection');
-    const activeJobDetails = document.getElementById('activeJobDetails');
+    const activeJobCard = document.getElementById('activeJobCard');
+    const activeJobInfo = document.getElementById('activeJobInfo');
 
     if (currentJob && difficulties[currentJob.difficulty]) {
         const difficulty = difficulties[currentJob.difficulty];
-        activeJobSection.style.display = 'block';
+        activeJobCard.style.display = 'block';
         
-        activeJobDetails.innerHTML = `
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
-                <div>
-                    <h4 style="color: #f59e0b; margin-bottom: 8px;">
-                        <i class="fas fa-briefcase"></i> ${difficulty.label}
-                    </h4>
-                    <p><strong>Vehicle:</strong> ${currentJob.vehicle.toUpperCase()}</p>
-                    <p><strong>Type:</strong> ${difficulty.type === 'trailer' ? 'Trailer Delivery' : 'Box Delivery'}</p>
-                    ${currentJob.destination ? `<p><strong>Destination:</strong> ${currentJob.destination.name}</p>` : ''}
-                </div>
-                <div style="text-align: center;">
-                    <div style="padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.3);">
-                        <i class="fas fa-route" style="font-size: 24px; color: #f59e0b; margin-bottom: 8px;"></i>
-                        <p style="margin: 0; font-weight: 600;">Job In Progress</p>
-                        <p style="margin: 0; font-size: 12px; color: #94a3b8;">Follow GPS to destination</p>
-                    </div>
+        activeJobInfo.innerHTML = `
+            <div style="margin-bottom: 10px;">
+                <strong>${difficulty.label}</strong>
+            </div>
+            <div style="font-size: 13px; color: #d1d5db; line-height: 1.4;">
+                <div>🚛 Vehicle: ${currentJob.vehicle.toUpperCase()}</div>
+                <div>📋 Type: ${difficulty.type === 'trailer' ? 'Trailer Delivery' : 'Box Delivery'}</div>
+                ${currentJob.destination ? `<div>📍 Destination: ${currentJob.destination.name}</div>` : ''}
+                <div style="margin-top: 8px; padding: 8px; background: rgba(245, 158, 11, 0.1); border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);">
+                    <div style="color: #f59e0b; font-weight: 600;">🎯 Job In Progress</div>
+                    <div style="font-size: 11px; color: #94a3b8;">Follow GPS to destination</div>
                 </div>
             </div>
         `;
     } else {
-        activeJobSection.style.display = 'none';
+        activeJobCard.style.display = 'none';
     }
 }
 
@@ -295,13 +283,10 @@ function updateActiveJobSection() {
 function startJob(difficulty) {
     if (!difficulty) return;
     
-    // Send request to start job
     fetch(`https://${GetParentResourceName()}/startJob`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ difficulty: difficulty })
-    }).then(() => {
-        // NUI will be closed by the client script
     }).catch(() => {
         closeNUI();
     });
@@ -311,8 +296,6 @@ function cancelJob() {
     fetch(`https://${GetParentResourceName()}/cancelJob`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
-    }).then(() => {
-        // NUI will be closed by the client script
     }).catch(() => {
         closeNUI();
     });
@@ -328,8 +311,6 @@ function rentVehicle(vehicleType, difficulty) {
             vehicleType: vehicleType,
             difficulty: difficulty
         })
-    }).then(() => {
-        // NUI will be closed by the client script
     }).catch(() => {
         closeNUI();
     });
@@ -351,9 +332,4 @@ document.addEventListener('keydown', function(event) {
         event.preventDefault();
         event.stopPropagation();
     }
-});
-
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    hideUI();
 });

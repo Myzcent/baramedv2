@@ -1,106 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Trucker Job Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trucker Dashboard</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div id="app">
-        <div class="container">
+    <div id="app" style="display: none;">
+        <div class="dashboard">
             <!-- Header -->
             <div class="header">
-                <div class="header-left">
-                    <i class="fas fa-truck"></i>
-                    <h1>Trucker Dashboard</h1>
-                </div>
-                <button class="close-btn" onclick="closeNUI()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <!-- Player Stats Section -->
-            <div class="player-section">
-                <div class="player-card">
-                    <div class="player-info">
-                        <div class="player-avatar">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="player-details">
-                            <h2 id="playerName">Driver</h2>
-                            <div class="player-meta">
-                                <span class="level">Level <span id="playerLevel">1</span></span>
-                                <span class="tier-badge" id="playerTier">Rookie</span>
-                            </div>
-                        </div>
+                <div class="header-content">
+                    <div class="logo">
+                        <span class="truck-icon">🚛</span>
+                        <h1>Trucker Dashboard</h1>
                     </div>
-                    
-                    <div class="exp-section">
-                        <div class="exp-info">
-                            <span id="expText">EXP: 0 / 100</span>
-                            <span class="rep-text">REP: <span id="playerRep">0</span></span>
-                        </div>
-                        <div class="exp-bar">
-                            <div class="exp-fill" id="expFill" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="stats-row">
-                        <div class="stat-item">
-                            <i class="fas fa-box"></i>
-                            <div>
-                                <span class="stat-value" id="totalDeliveries">0</span>
-                                <span class="stat-label">Deliveries</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-dollar-sign"></i>
-                            <div>
-                                <span class="stat-value" id="totalEarnings">$0</span>
-                                <span class="stat-label">Total Earned</span>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="close-btn" onclick="closeNUI()">✕</button>
                 </div>
             </div>
 
-            <!-- Active Job Section -->
-            <div id="activeJobSection" class="active-job-section" style="display: none;">
-                <div class="section-header">
-                    <h3><i class="fas fa-clipboard-check"></i> Current Job</h3>
-                    <button class="btn btn-danger" onclick="cancelJob()">
-                        <i class="fas fa-times"></i> Cancel Job
-                    </button>
-                </div>
-                <div id="activeJobDetails" class="active-job-details"></div>
-            </div>
-
-            <!-- Main Content Tabs -->
-            <div class="tabs-container">
-                <div class="tabs-header">
-                    <button class="tab-btn active" data-tab="jobs">
-                        <i class="fas fa-briefcase"></i> Available Jobs
-                    </button>
-                    <button class="tab-btn" data-tab="rental">
-                        <i class="fas fa-key"></i> Vehicle Rental
-                    </button>
-                </div>
-
-                <!-- Jobs Tab -->
-                <div id="jobsTab" class="tab-content active">
-                    <div class="jobs-grid" id="jobsList"></div>
-                </div>
-
-                <!-- Rental Tab -->
-                <div id="rentalTab" class="tab-content">
-                    <div class="rental-info">
-                        <p><i class="fas fa-info-circle"></i> Rent a vehicle to start working. Pricing varies based on your level and reputation.</p>
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Player Info -->
+                    <div class="player-card">
+                        <div class="player-header">
+                            <div class="player-avatar">👤</div>
+                            <div class="player-info">
+                                <h3 id="playerName">Driver</h3>
+                                <div class="player-badges">
+                                    <span class="level-badge">Level <span id="playerLevel">1</span></span>
+                                    <span class="tier-badge" id="playerTier">Rookie</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="exp-container">
+                            <div class="exp-info">
+                                <span id="expText">EXP: 0 / 100</span>
+                                <span class="rep-text">REP: <span id="playerRep">0</span></span>
+                            </div>
+                            <div class="exp-bar">
+                                <div class="exp-progress" id="expFill"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-icon">📦</div>
+                                <div class="stat-info">
+                                    <span class="stat-number" id="totalDeliveries">0</span>
+                                    <span class="stat-label">Deliveries</span>
+                                </div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-icon">💰</div>
+                                <div class="stat-info">
+                                    <span class="stat-number" id="totalEarnings">$0</span>
+                                    <span class="stat-label">Earned</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="vehicles-grid" id="vehiclesList"></div>
+
+                    <!-- Active Job -->
+                    <div id="activeJobCard" class="active-job-card" style="display: none;">
+                        <div class="active-job-header">
+                            <h4>🚚 Current Job</h4>
+                            <button class="cancel-btn" onclick="cancelJob()">Cancel</button>
+                        </div>
+                        <div id="activeJobInfo" class="active-job-info"></div>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="content-area">
+                    <!-- Navigation Tabs -->
+                    <div class="nav-tabs">
+                        <button class="nav-tab active" data-tab="jobs">
+                            <span class="tab-icon">💼</span>
+                            <span>Available Jobs</span>
+                        </button>
+                        <button class="nav-tab" data-tab="rental">
+                            <span class="tab-icon">🔑</span>
+                            <span>Vehicle Rental</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <!-- Jobs Tab -->
+                        <div id="jobsContent" class="content-panel active">
+                            <div class="content-header">
+                                <h2>Available Jobs</h2>
+                                <p>Choose a job that matches your level and start earning!</p>
+                            </div>
+                            <div class="jobs-container" id="jobsList"></div>
+                        </div>
+
+                        <!-- Rental Tab -->
+                        <div id="rentalContent" class="content-panel">
+                            <div class="content-header">
+                                <h2>Vehicle Rental</h2>
+                                <p>Rent a vehicle to start working. Pricing is based on your reputation.</p>
+                            </div>
+                            <div class="vehicles-container" id="vehiclesList"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

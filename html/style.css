@@ -1,3 +1,4 @@
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -5,42 +6,45 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: transparent;
     color: #ffffff;
     overflow: hidden;
 }
 
+/* Main App Container */
 #app {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
     z-index: 9999;
 }
 
-.container {
-    width: 90%;
-    max-width: 1200px;
-    max-height: 90vh;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
-    border: 1px solid rgba(59, 130, 246, 0.3);
+.dashboard {
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border: 2px solid #3b82f6;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.4s ease-out;
 }
 
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(-20px) scale(0.95);
+        transform: translateY(-30px) scale(0.95);
     }
     to {
         opacity: 1;
@@ -50,132 +54,137 @@ body {
 
 /* Header */
 .header {
+    background: linear-gradient(90deg, #1e40af, #3b82f6);
+    padding: 0;
+    border-bottom: 2px solid #3b82f6;
+}
+
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 30px;
-    background: linear-gradient(90deg, #1e40af, #3b82f6);
-    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
 }
 
-.header-left {
+.logo {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.header-left i {
-    font-size: 28px;
-    color: #ffffff;
+.truck-icon {
+    font-size: 32px;
 }
 
-.header h1 {
-    font-size: 24px;
+.logo h1 {
+    font-size: 28px;
     font-weight: 700;
-    color: #ffffff;
+    color: white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .close-btn {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border: none;
     border-radius: 50%;
     background: rgba(239, 68, 68, 0.2);
     color: #ef4444;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .close-btn:hover {
-    background: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.4);
     transform: scale(1.1);
 }
 
-/* Content Container */
-.content {
-    padding: 30px;
-    height: calc(100vh - 120px);
+/* Main Content */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 320px;
+    background: rgba(15, 23, 42, 0.8);
+    border-right: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 25px;
     overflow-y: auto;
 }
 
-/* Player Section */
-.player-section {
-    margin-bottom: 30px;
-}
-
+/* Player Card */
 .player-card {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
+    border: 1px solid rgba(34, 197, 94, 0.4);
     border-radius: 16px;
-    padding: 25px;
-    margin: 20px 30px;
-}
-
-.player-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+    padding: 20px;
     margin-bottom: 20px;
 }
 
+.player-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
 .player-avatar {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    color: white;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-.player-details h2 {
-    font-size: 24px;
+.player-info h3 {
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
-.player-meta {
+.player-badges {
     display: flex;
+    gap: 10px;
     align-items: center;
-    gap: 15px;
 }
 
-.level {
-    font-size: 14px;
-    color: #94a3b8;
+.level-badge {
+    padding: 3px 10px;
+    background: rgba(59, 130, 246, 0.3);
+    border: 1px solid #3b82f6;
+    border-radius: 12px;
+    font-size: 12px;
     font-weight: 600;
 }
 
 .tier-badge {
-    padding: 4px 12px;
-    border-radius: 20px;
+    padding: 3px 10px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-radius: 12px;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    color: white;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
 }
 
-.exp-section {
-    margin-bottom: 20px;
+/* Experience Container */
+.exp-container {
+    margin-bottom: 15px;
 }
 
 .exp-info {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 8px;
-    font-size: 14px;
-    color: #94a3b8;
+    font-size: 13px;
 }
 
 .rep-text {
@@ -190,178 +199,206 @@ body {
     overflow: hidden;
 }
 
-.exp-fill {
+.exp-progress {
     height: 100%;
     background: linear-gradient(90deg, #3b82f6, #06b6d4);
     border-radius: 4px;
     transition: width 0.5s ease;
+    width: 0%;
 }
 
-.stats-row {
+/* Stats Grid */
+.stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 12px;
 }
 
-.stat-item {
+.stat-box {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 15px;
+    gap: 10px;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+    border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.stat-item i {
+.stat-icon {
     font-size: 20px;
-    color: #3b82f6;
 }
 
-.stat-value {
+.stat-number {
     display: block;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #ffffff;
 }
 
 .stat-label {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
     color: #94a3b8;
     text-transform: uppercase;
 }
 
-/* Active Job Section */
-.active-job-section {
-    margin: 20px 30px;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
-    border: 1px solid rgba(245, 158, 11, 0.3);
+/* Active Job Card */
+.active-job-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+    border: 1px solid rgba(245, 158, 11, 0.4);
     border-radius: 16px;
+    padding: 20px;
 }
 
-.section-header {
+.active-job-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
 }
 
-.section-header h3 {
-    font-size: 18px;
-    font-weight: 600;
+.active-job-header h4 {
+    font-size: 16px;
     color: #f59e0b;
+    font-weight: 600;
+}
+
+.cancel-btn {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.active-job-info {
+    color: #e5e7eb;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Content Area */
+.content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    display: flex;
+    background: rgba(15, 23, 42, 0.8);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 0 30px;
+}
+
+.nav-tab {
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.active-job-details {
-    color: #e5e7eb;
-    line-height: 1.6;
-}
-
-/* Tabs */
-.tabs-container {
-    margin: 0 30px 30px 30px;
-}
-
-.tabs-header {
-    display: flex;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 20px;
-}
-
-.tab-btn {
-    flex: 1;
-    padding: 12px 20px;
-    border: none;
+    padding: 18px 25px;
     background: transparent;
+    border: none;
     color: #94a3b8;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
-    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    border-bottom: 3px solid transparent;
 }
 
-.tab-btn.active {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    color: white;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+.nav-tab.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
 }
 
-.tab-btn:hover:not(.active) {
+.nav-tab:hover:not(.active) {
     color: #e5e7eb;
     background: rgba(255, 255, 255, 0.05);
 }
 
+.tab-icon {
+    font-size: 18px;
+}
+
+/* Tab Content */
 .tab-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.content-panel {
     display: none;
 }
 
-.tab-content.active {
+.content-panel.active {
     display: block;
 }
 
-/* Jobs Grid */
-.jobs-grid, .vehicles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
+.content-header {
+    margin-bottom: 25px;
 }
 
+.content-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.content-header p {
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+/* Jobs and Vehicles Container */
+.jobs-container, .vehicles-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+/* Job and Vehicle Cards */
 .job-card, .vehicle-card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    padding: 24px;
+    padding: 25px;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
-.job-card::before, .vehicle-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #3b82f6, #06b6d4);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
 .job-card:hover, .vehicle-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(59, 130, 246, 0.4);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.job-card:hover::before, .vehicle-card:hover::before {
-    opacity: 1;
+    transform: translateY(-5px);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .job-header, .vehicle-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 16px;
+    margin-bottom: 15px;
 }
 
 .job-title, .vehicle-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     color: #ffffff;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 }
 
 .job-subtitle, .vehicle-subtitle {
@@ -370,7 +407,7 @@ body {
 }
 
 .level-badge, .price-badge {
-    padding: 4px 12px;
+    padding: 5px 12px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
@@ -379,23 +416,25 @@ body {
 }
 
 .job-details, .vehicle-details {
-    margin: 16px 0;
+    margin: 15px 0;
     color: #d1d5db;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-size: 14px;
 }
 
 .rewards-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin: 16px 0;
+    margin: 20px 0;
 }
 
 .reward-item {
     text-align: center;
     padding: 12px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .reward-label {
@@ -403,10 +442,11 @@ body {
     color: #94a3b8;
     text-transform: uppercase;
     margin-bottom: 4px;
+    font-weight: 600;
 }
 
 .reward-value {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #ffffff;
 }
@@ -414,19 +454,16 @@ body {
 /* Buttons */
 .btn {
     width: 100%;
-    padding: 14px 20px;
+    padding: 15px 20px;
     border: none;
     border-radius: 12px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    margin-top: 15px;
 }
 
 .btn-primary {
@@ -437,24 +474,13 @@ body {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.4);
 }
 
 .btn-secondary {
-    background: rgba(107, 114, 128, 0.3);
+    background: rgba(107, 114, 128, 0.4);
     color: #9ca3af;
     cursor: not-allowed;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
-
-.btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
 .btn-rental {
@@ -465,26 +491,10 @@ body {
 
 .btn-rental:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4);
 }
 
-/* Rental Info */
-.rental-info {
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 20px;
-    color: #93c5fd;
-    font-size: 14px;
-}
-
-.rental-info i {
-    margin-right: 8px;
-    color: #3b82f6;
-}
-
-/* Scrollbar */
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -504,59 +514,52 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 280px;
+    }
+    
+    .jobs-container, .vehicles-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
-    .container {
-        width: 95%;
-        max-height: 95vh;
+    .dashboard {
+        width: 98%;
+        height: 95vh;
     }
     
-    .header {
-        padding: 15px 20px;
+    .main-content {
+        flex-direction: column;
     }
     
-    .header h1 {
-        font-size: 20px;
-    }
-    
-    .player-card {
-        margin: 15px 20px;
+    .sidebar {
+        width: 100%;
+        max-height: 200px;
         padding: 20px;
     }
     
-    .tabs-container {
-        margin: 0 20px 20px 20px;
+    .player-card {
+        padding: 15px;
     }
     
-    .jobs-grid, .vehicles-grid {
+    .stats-grid {
         grid-template-columns: 1fr;
     }
     
-    .stats-row {
+    .jobs-container, .vehicles-container {
         grid-template-columns: 1fr;
     }
     
     .rewards-grid {
         grid-template-columns: 1fr;
-        gap: 8px;
     }
 }
 
-/* Status indicators */
-.status-available {
-    color: #22c55e;
-}
-
-.status-locked {
-    color: #f59e0b;
-}
-
-.status-active {
-    color: #3b82f6;
-}
-
-/* Animation for job cards */
+/* Animation */
 .job-card, .vehicle-card {
-    animation: fadeInUp 0.5s ease forwards;
+    animation: fadeInUp 0.6s ease forwards;
     opacity: 0;
     transform: translateY(20px);
 }
