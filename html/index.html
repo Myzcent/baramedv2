@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trucker Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" style="display: none;">
+        <div class="dashboard">
+            <!-- Header with Level Prominently Displayed -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="truck-icon">TRUCK</div>
+                        <h1>Trucker Dashboard</h1>
+                    </div>
+                    <div class="header-stats">
+                        <div class="level-display">
+                            <div class="level-number" id="headerLevel">1</div>
+                            <div class="level-label">LEVEL</div>
+                        </div>
+                        <div class="exp-display">
+                            <div class="exp-bar-header">
+                                <div class="exp-progress-header" id="headerExpFill"></div>
+                            </div>
+                            <div class="exp-text" id="headerExpText">0 / 100 EXP</div>
+                        </div>
+                    </div>
+                    <button class="close-btn" onclick="closeNUI()">X</button>
+                </div>
+            </div>
+
+            <!-- Player Info Bar -->
+            <div class="player-bar">
+                <div class="player-info">
+                    <div class="player-name" id="playerName">Driver Name</div>
+                    <div class="player-tier" id="playerTier">Rookie Driver</div>
+                </div>
+                <div class="player-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Reputation</span>
+                        <span class="stat-value" id="playerRep">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Deliveries</span>
+                        <span class="stat-value" id="totalDeliveries">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Earned</span>
+                        <span class="stat-value" id="totalEarnings">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Job Section -->
+            <div id="activeJobSection" class="active-job-section" style="display: none;">
+                <div class="active-job-header">
+                    <h3>Current Job</h3>
+                    <div class="job-progress" id="jobProgress"></div>
+                    <button class="cancel-job-btn" onclick="cancelJob()">Cancel Job</button>
+                </div>
+                <div id="activeJobDetails" class="active-job-details"></div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Navigation Tabs -->
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="jobs">Available Jobs</button>
+                    <button class="nav-tab" data-tab="rental">Vehicle Rental</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Jobs Tab -->
+                    <div id="jobsContent" class="content-panel active">
+                        <div class="jobs-grid" id="jobsList"></div>
+                    </div>
+
+                    <!-- Rental Tab -->
+                    <div id="rentalContent" class="content-panel">
+                        <div class="rental-info">
+                            <p>Rent a vehicle to start working. You must be near the rental location to rent a vehicle.</p>
+                            <p><strong>Return Vehicle:</strong> Press F7 or use /returnrental command anywhere</p>
+                        </div>
+                        <div class="vehicles-grid" id="vehiclesList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
